@@ -86,16 +86,22 @@ public class ApostaService implements IApostaService {
         }
     }
 
-    @Override
-    public ApostaEntity consultarPorEmail(String email) {
-        return null;
-    }
 
     //@CachePut(unless = "#result.size()<3")
     @Override
     public List<ApostaEntity> listar() {
         try {
             return this.apostaRepository.findAll();
+        }catch (Exception e) {
+            throw new ApostaException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //@CachePut(unless = "#result.size()<3")
+    @Override
+    public List<ApostaEntity> listaPorData(String email) {
+        try {
+            return this.apostaRepository.listaPorData(email);
         }catch (Exception e) {
             throw new ApostaException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

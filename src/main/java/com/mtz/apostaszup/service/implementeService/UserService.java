@@ -86,6 +86,7 @@ public class UserService implements IUserService {
 
     @Override
     public UserEntity consultarPorEmail(String email) {
+        //TODO - Fazer em outro momento
         return null;
     }
 
