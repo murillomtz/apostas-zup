@@ -17,7 +17,7 @@ import java.util.*;
 @NoArgsConstructor
 public class UserEntity implements Serializable {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonInclude(JsonInclude.Include.NON_NULL) // Não pode ser Nulo
     @Id
     @GeneratedValue(generator = "incrementacao") //Passa para o JPA a responsabilidade de dar um ID
     @GenericGenerator(name = "incrementacao", strategy = "increment")
@@ -27,9 +27,15 @@ public class UserEntity implements Serializable {
     @Column(unique = true,name = "email")
     private String email;
 
+    @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String nome;
 
+
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @OneToMany(mappedBy = "userEntity")
+    @OneToMany(mappedBy = "user")
     private List<ApostaEntity> apostas = new ArrayList<>();
+    
+    
+    
 }

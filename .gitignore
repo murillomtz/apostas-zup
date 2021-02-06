@@ -1,5 +1,12 @@
 HELP.md
 target/
+/.project
+/.settings/
+/.classpath
+/.gitignore
+/mvnw
+/mvnw.cmd
+/.DS_Store
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
