@@ -32,5 +32,5 @@ public class UserDTO {
     @NotBlank(message = "Informe o nome")
     private String nome;
 
-    private List<ApostaEntity> apostas = new ArrayList<>();
+    private List<Long> apostas;
 }

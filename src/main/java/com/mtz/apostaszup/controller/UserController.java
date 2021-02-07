@@ -1,11 +1,11 @@
 package com.mtz.apostaszup.controller;
 
-import com.mtz.apostaszup.dto.ApostaDTO;
+
 import com.mtz.apostaszup.dto.UserDTO;
-import com.mtz.apostaszup.entity.ApostaEntity;
+
 import com.mtz.apostaszup.entity.UserEntity;
 import com.mtz.apostaszup.model.Response;
-import com.mtz.apostaszup.service.IApostaService;
+
 import com.mtz.apostaszup.service.IUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -17,6 +17,7 @@ import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CacheConfig(cacheNames = "user")
@@ -24,27 +25,37 @@ import java.util.List;
 public class UserService implements IUserService {
 
     private IUserRepository userRepository;
+    private IApostaRepository apostaRepository;
 
-    public UserService(IUserRepository userRepository) {
+    public UserService(IUserRepository userRepository, IApostaRepository apostaRepository) {
         this.userRepository = userRepository;
+        this.apostaRepository=apostaRepository;
+
     }
 
     @Override
     public Boolean cadastrar(UserDTO userDTO) {
+        System.out.println("#######   PASSO CADASTRAR ##########");
         try {
-
+            System.out.println("#######   PASSO TRY ##########");
             if (userDTO.getId() != null) {
+                System.out.println("#######   PASSO NULL ##########");
                 throw new UserException(MensagensConstant.ERRO_ID_INFORMADO.getValor(), HttpStatus.BAD_REQUEST);
+
             }
             if (this.userRepository.findById(userDTO.getId()) != null) {
+                System.out.println("#######   PASSO NULL 2 ##########");
                 throw new UserException(MensagensConstant.ERRO_USER_CADASTRADO_ANTERIORMENTE.getValor(), HttpStatus.BAD_REQUEST);
             }
-            return this.cadastrar(userDTO);
+            System.out.println("#######   PASSO 1 ##########");
+            return this.cadastrarOuAtualizar(userDTO);
 
         }catch (UserException c) {
+            System.out.println("#######   PASSO C ##########");
             throw c;
         }
         catch (Exception e) {
+            System.out.println("#######   PASSO AND ##########");
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -90,7 +101,7 @@ public class UserService implements IUserService {
         return null;
     }
 
-    //@CachePut(unless = "#result.size()<3")
+    @CachePut(unless = "#result.size()<3")
     @Override
     public List<UserEntity> listar() {
         try {
@@ -98,5 +109,28 @@ public class UserService implements IUserService {
         }catch (Exception e) {
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+
+    private Boolean cadastrarOuAtualizar(UserDTO user) {
+        System.out.println("#######   PASSO CASTRO OU ATT ##########");
+        List<ApostaEntity> listApostaEntity = new ArrayList<>();
+
+        if (user.getApostas()!=null && !user.getApostas().isEmpty()) {
+
+            user.getApostas().forEach(aposta -> {
+                if (this.apostaRepository.findById(aposta).isPresent())
+                    listApostaEntity.add(this.apostaRepository.findById(aposta).get());
+            });
+        }
+        UserEntity userEntity = new UserEntity();
+        if(user.getId()!=null) {
+            userEntity.setId(user.getId());
+        }
+        userEntity.setEmail(user.getEmail());
+        userEntity.setNome(user.getNome());
+        userEntity.setApostas(listApostaEntity);
+
+        this.userRepository.save(userEntity);
+        return Boolean.TRUE;
     }
 }

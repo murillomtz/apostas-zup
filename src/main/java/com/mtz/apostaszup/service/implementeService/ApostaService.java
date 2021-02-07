@@ -97,7 +97,7 @@ public class ApostaService implements IApostaService {
         }
     }
 
-    //@CachePut(unless = "#result.size()<3")
+    @CachePut(unless = "#result.size()<3")
     @Override
     public List<ApostaEntity> listaPorData(String email) {
         try {

@@ -2,6 +2,7 @@ package com.mtz.apostaszup.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
@@ -17,9 +18,9 @@ import java.util.*;
 @NoArgsConstructor
 public class UserEntity implements Serializable {
 
-    @JsonInclude(JsonInclude.Include.NON_NULL) // Não pode ser Nulo
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     @Id
-    @GeneratedValue(generator = "incrementacao") //Passa para o JPA a responsabilidade de dar um ID
+    @GeneratedValue(generator = "incrementacao")
     @GenericGenerator(name = "incrementacao", strategy = "increment")
     private Long id;
 

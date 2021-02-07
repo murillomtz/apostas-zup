@@ -44,9 +44,9 @@ public class ApostaController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<Response<ApostaEntity>> consultarApostaPorEmail(@PathVariable String email) {
-        Response<ApostaEntity> response = new Response<>();
-        response.setData(this.apostaService.consultarPorEmail(email));
+    public ResponseEntity<Response<List<ApostaEntity>>> consultarApostaPorEmail(@PathVariable String email) {
+        Response<List<ApostaEntity>> response = new Response<>();
+        response.setData(this.apostaService.listaPorData(email));
         response.setStatusCode(HttpStatus.OK.value());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

@@ -1,8 +1,11 @@
 package com.mtz.apostaszup.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
+import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -19,8 +22,9 @@ public class ApostaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne
+	@ManyToOne()
 	@JoinColumn(name = "user_email", referencedColumnName = "email")
+	@JsonIgnore
 	private UserEntity user;
 
 	@JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -40,7 +44,7 @@ public class ApostaEntity implements Serializable {
 		this.data = LocalDate.now();
 		Random rd = new Random();
 		while (numerosAleatorios.size() < 6) {
-			numerosAleatorios.add(rd.nextInt(60) + 1);
+			this.numerosAleatorios.add(rd.nextInt(60) + 1);
 		}
 
 	}

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 
+
 @Repository
 public interface IApostaRepository extends JpaRepository<ApostaEntity, Long> {
 
     @Query("SELECT a FROM ApostaEntity a where a.user.email = :email ORDER BY a.data")
-    List<ApostaEntity> listaPorData(@Param("email")String email);
+    List<ApostaEntity> listaPorData(@Param("email") String email);
+
 }

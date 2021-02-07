@@ -2,6 +2,7 @@ package com.mtz.apostaszup.dto;
 
 
 import com.mtz.apostaszup.entity.UserEntity;
+import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,7 +21,7 @@ public class ApostaDTO {
 
     private UserEntity user;
 
-
+    @NotNull
     private LocalDate data;
 
 
