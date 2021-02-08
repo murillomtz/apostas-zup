@@ -7,6 +7,7 @@ import com.mtz.apostaszup.entity.UserEntity;
 import com.mtz.apostaszup.model.Response;
 
 import com.mtz.apostaszup.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +19,10 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
+    @Autowired
     private final IUserService userService;
 
+    @Autowired
     public UserController(IUserService userService) {
         this.userService = userService;
 
@@ -49,7 +52,7 @@ public class UserController {
     @GetMapping("/{email}")
     public ResponseEntity<Response<UserEntity>> consultarUserPorEmail(@PathVariable String email) {
         Response<UserEntity> response = new Response<>();
-        response.setData(this.userService.consultarPorEmail(email));
+        response.setData(this.userService.findByEmail(email));
         response.setStatusCode(HttpStatus.OK.value());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

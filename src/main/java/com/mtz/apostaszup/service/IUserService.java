@@ -15,7 +15,7 @@ public interface IUserService {
 
     UserEntity findById(Long id);
 
-    UserEntity consultarPorEmail(String email);
-
     List<UserEntity> listar();
+
+    UserEntity findByEmail(String email);
 }

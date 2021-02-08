@@ -12,9 +12,9 @@ public interface IApostaService {
 
     Boolean excluir(Long id);
 
-    ApostaEntity findById(Long id);
+    ApostaDTO findById(Long id);
 
-    List<ApostaEntity> listar();
+    List<ApostaDTO> listar();
 
-    List<ApostaEntity> listaPorData(String email);
+    List<ApostaDTO> listaPorData(String email);
 }

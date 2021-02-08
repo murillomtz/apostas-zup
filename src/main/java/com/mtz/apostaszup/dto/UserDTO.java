@@ -4,7 +4,9 @@ package com.mtz.apostaszup.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mtz.apostaszup.entity.ApostaEntity;
 import com.mtz.apostaszup.entity.UserEntity;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,7 +22,8 @@ import java.util.List;
 import java.util.Set;
 
 @Data
-@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class UserDTO {
 
 

@@ -22,17 +22,17 @@ public class ApostaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@ManyToOne()
+	@ManyToOne(fetch= FetchType.LAZY)
 	@JoinColumn(name = "user_email", referencedColumnName = "email")
 	@JsonIgnore
 	private UserEntity user;
 
-	@JsonInclude(JsonInclude.Include.NON_EMPTY)
+	//@JsonInclude(JsonInclude.Include.NON_EMPTY)
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
 	private LocalDate data;
 
 	@ElementCollection
-	private Set<Integer> numerosAleatorios = new HashSet<>();
+	private Set<Long> numerosAleatorios = new HashSet<>();
 
 	public ApostaEntity() {
 
@@ -43,9 +43,12 @@ public class ApostaEntity implements Serializable {
 		this.user = user;
 		this.data = LocalDate.now();
 		Random rd = new Random();
-		while (numerosAleatorios.size() < 6) {
-			this.numerosAleatorios.add(rd.nextInt(60) + 1);
-		}
+		getNumerosAleatorios().forEach(num -> {
+			long randon = rd.nextLong();
+			if ( randon <60 && numerosAleatorios.size() < 6)
+				getNumerosAleatorios().add(randon);
+		});
+
 
 	}
 }

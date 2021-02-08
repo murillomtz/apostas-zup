@@ -12,6 +12,7 @@ import com.mtz.apostaszup.repository.IApostaRepository;
 import com.mtz.apostaszup.repository.IUserRepository;
 import com.mtz.apostaszup.service.IApostaService;
 import com.mtz.apostaszup.service.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.http.HttpStatus;
@@ -24,9 +25,11 @@ import java.util.List;
 @Service
 public class UserService implements IUserService {
 
-    private IUserRepository userRepository;
-    private IApostaRepository apostaRepository;
 
+    private IUserRepository userRepository;
+
+    private IApostaRepository apostaRepository;
+    @Autowired
     public UserService(IUserRepository userRepository, IApostaRepository apostaRepository) {
         this.userRepository = userRepository;
         this.apostaRepository=apostaRepository;
@@ -35,27 +38,26 @@ public class UserService implements IUserService {
 
     @Override
     public Boolean cadastrar(UserDTO userDTO) {
-        System.out.println("#######   PASSO CADASTRAR ##########");
-        try {
-            System.out.println("#######   PASSO TRY ##########");
-            if (userDTO.getId() != null) {
-                System.out.println("#######   PASSO NULL ##########");
-                throw new UserException(MensagensConstant.ERRO_ID_INFORMADO.getValor(), HttpStatus.BAD_REQUEST);
+              try {
 
+            if (userDTO.getId() != null) {
+
+                throw new UserException(MensagensConstant.ERRO_ID_INFORMADO.getValor(), HttpStatus.BAD_REQUEST);
             }
-            if (this.userRepository.findById(userDTO.getId()) != null) {
-                System.out.println("#######   PASSO NULL 2 ##########");
+
+            if (this.userRepository.findByEmail(userDTO.getEmail()) != null) {
+
                 throw new UserException(MensagensConstant.ERRO_USER_CADASTRADO_ANTERIORMENTE.getValor(), HttpStatus.BAD_REQUEST);
             }
-            System.out.println("#######   PASSO 1 ##########");
+
             return this.cadastrarOuAtualizar(userDTO);
 
         }catch (UserException c) {
-            System.out.println("#######   PASSO C ##########");
+
             throw c;
         }
         catch (Exception e) {
-            System.out.println("#######   PASSO AND ##########");
+
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -95,12 +97,6 @@ public class UserService implements IUserService {
         }
     }
 
-    @Override
-    public UserEntity consultarPorEmail(String email) {
-        //TODO - Fazer em outro momento
-        return null;
-    }
-
     @CachePut(unless = "#result.size()<3")
     @Override
     public List<UserEntity> listar() {
@@ -111,8 +107,27 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public UserEntity findByEmail(String email) {
+        System.out.println("###### PASSOU FINDBYEMAIL ######");
+        try {
+            UserEntity user = this.userRepository.findByEmail(email);
+            if (user == null) {
+                System.out.println("###### USER NULO ######");
+                throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
+            }
+
+            return user;
+
+        } catch (UserException c) {
+            throw c;
+        } catch (Exception e) {
+            System.out.println("###### ERRO GERAL FUNDBYemAISL ######");
+            throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private Boolean cadastrarOuAtualizar(UserDTO user) {
-        System.out.println("#######   PASSO CASTRO OU ATT ##########");
         List<ApostaEntity> listApostaEntity = new ArrayList<>();
 
         if (user.getApostas()!=null && !user.getApostas().isEmpty()) {

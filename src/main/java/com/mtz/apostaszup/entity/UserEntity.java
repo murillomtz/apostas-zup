@@ -15,7 +15,7 @@ import java.util.*;
 @Entity
 @Table(name = "tb_user")
 @Data
-@NoArgsConstructor
+//@NoArgsConstructor
 public class UserEntity implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -31,12 +31,18 @@ public class UserEntity implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private String nome;
 
-
-
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch= FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ApostaEntity> apostas = new ArrayList<>();
-    
-    
-    
+
+
+    public UserEntity() {
+
+    }
+    public UserEntity(Long id, String email, String nome, List<ApostaEntity> apostas) {
+        this.id = id;
+        this.email = email;
+        this.nome = nome;
+        this.apostas = apostas;
+    }
 }
