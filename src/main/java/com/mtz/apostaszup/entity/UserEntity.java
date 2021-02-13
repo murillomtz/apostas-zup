@@ -4,7 +4,9 @@ package com.mtz.apostaszup.entity;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,8 +16,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "tb_user")
-@Data
-//@NoArgsConstructor
+@Getter
+@Setter
 public class UserEntity implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -32,7 +34,7 @@ public class UserEntity implements Serializable {
     private String nome;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @OneToMany(mappedBy = "user", fetch= FetchType.LAZY,cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch= FetchType.EAGER,cascade = CascadeType.REMOVE,orphanRemoval = true)
     private List<ApostaEntity> apostas = new ArrayList<>();
 
 
@@ -45,4 +47,5 @@ public class UserEntity implements Serializable {
         this.nome = nome;
         this.apostas = apostas;
     }
-}
+
+    }

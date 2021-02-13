@@ -17,4 +17,6 @@ public interface IApostaService {
     List<ApostaDTO> listar();
 
     List<ApostaDTO> listaPorData(String email);
+
+    ApostaEntity findByUser(String email);
 }
