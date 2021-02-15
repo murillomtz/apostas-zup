@@ -22,7 +22,7 @@ import java.util.List;
 
 @Api(tags = SwaggerConfig.USER)
 @RestController
-@RequestMapping("/user")
+@RequestMapping(value = "/user")
 public class UserController {
 
     @Autowired
@@ -57,8 +57,8 @@ public class UserController {
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
     @GetMapping
-    public ResponseEntity<Response<List<UserEntity>>> listarUser() {
-        Response<List<UserEntity>> response = new Response<>();
+    public ResponseEntity<Response<List<UserDTO>>> listarUser() {
+        Response<List<UserDTO>> response = new Response<>();
         response.setData(this.userService.listar());
         response.setStatusCode(HttpStatus.OK.value());
         return ResponseEntity.status(HttpStatus.OK).body(response);
@@ -71,10 +71,12 @@ public class UserController {
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
     @GetMapping("e-mail/{email}")
-    public ResponseEntity<Response<UserEntity>> consultarUserPorEmail(@PathVariable String email) {
-        Response<UserEntity> response = new Response<>();
+    public ResponseEntity<Response<UserDTO>> consultarUserPorEmail(@PathVariable String email) {
+        Response<UserDTO> response = new Response<>();
         response.setData(this.userService.findByEmail(email));
         response.setStatusCode(HttpStatus.OK.value());
+        //response.setCharacterEncoding("UTF-8");
+
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }

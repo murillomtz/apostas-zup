@@ -14,8 +14,10 @@ public interface IApostaService {
 
     ApostaDTO findById(Long id);
 
+    //RETORNA ENTIDADE
     List<ApostaDTO> listar();
 
+    //RETORNA ENTIDADE
     List<ApostaDTO> listaPorData(String email);
 
     ApostaEntity findByUser(String email);

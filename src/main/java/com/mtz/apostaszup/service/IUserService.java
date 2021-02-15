@@ -13,9 +13,9 @@ public interface IUserService {
 
     Boolean excluir(Long id);
 
-    UserEntity findById(Long id);
+    UserDTO findById(Long id);
 
-    List<UserEntity> listar();
+    List<UserDTO> listar();
 
-    UserEntity findByEmail(String email);
+    UserDTO findByEmail(String email);
 }

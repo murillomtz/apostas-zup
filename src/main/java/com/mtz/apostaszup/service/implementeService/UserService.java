@@ -2,16 +2,14 @@ package com.mtz.apostaszup.service.implementeService;
 
 
 import com.mtz.apostaszup.constant.MensagensConstant;
-import com.mtz.apostaszup.dto.ApostaDTO;
 import com.mtz.apostaszup.dto.UserDTO;
 import com.mtz.apostaszup.entity.ApostaEntity;
 import com.mtz.apostaszup.entity.UserEntity;
-import com.mtz.apostaszup.exception.ApostaException;
 import com.mtz.apostaszup.exception.UserException;
 import com.mtz.apostaszup.repository.IApostaRepository;
 import com.mtz.apostaszup.repository.IUserRepository;
-import com.mtz.apostaszup.service.IApostaService;
 import com.mtz.apostaszup.service.IUserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CachePut;
@@ -20,25 +18,28 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CacheConfig(cacheNames = "user")
 @Service
 public class UserService implements IUserService {
 
 
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
+    private final IApostaRepository apostaRepository;
+    private final ModelMapper mapper;
 
-    private IApostaRepository apostaRepository;
     @Autowired
     public UserService(IUserRepository userRepository, IApostaRepository apostaRepository) {
         this.userRepository = userRepository;
-        this.apostaRepository=apostaRepository;
+        this.apostaRepository = apostaRepository;
+        this.mapper = new ModelMapper();
 
     }
 
     @Override
     public Boolean cadastrar(UserDTO userDTO) {
-              try {
+        try {
 
             if (userDTO.getId() != null) {
 
@@ -52,11 +53,10 @@ public class UserService implements IUserService {
 
             return this.cadastrarOuAtualizar(userDTO);
 
-        }catch (UserException c) {
+        } catch (UserException c) {
 
             throw c;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -65,31 +65,27 @@ public class UserService implements IUserService {
     @Override
     public Boolean excluir(Long id) {
         try {
-            if(this.userRepository.findById(id).isPresent()) {
+            if (this.userRepository.findById(id).isPresent()) {
                 this.userRepository.deleteById(id);
                 return Boolean.TRUE;
             }
             throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
-        }catch (UserException c) {
+        } catch (UserException c) {
             throw c;
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @CachePut(key = "#id")
     @Override
-    public UserEntity findById(Long id) {
+    public UserDTO findById(Long id) {
         try {
-            UserEntity user = this.userRepository.findById(id).get();
-
-
-            if (user == null) {
-                throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
+            Optional<UserEntity> userOptional = this.userRepository.findById(id);
+            if (userOptional.isPresent()) {
+                return this.mapper.map(userOptional.get(), UserDTO.class);
             }
-
-            return user;
-
+            throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
         } catch (UserException c) {
             throw c;
         } catch (Exception e) {
@@ -99,29 +95,48 @@ public class UserService implements IUserService {
 
     @CachePut(unless = "#result.size()<3")
     @Override
-    public List<UserEntity> listar() {
+    public List<UserDTO> listar() {
         try {
-            return this.userRepository.findAll();
-        }catch (Exception e) {
+            List<UserEntity> userEntityList = this.userRepository.findAll();
+
+            List<UserDTO> userDTOList = new ArrayList<>();
+
+
+            for (UserEntity user : userEntityList) {
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(user.getId());
+                userDTO.setEmail(user.getEmail());
+                userDTO.setNome(user.getNome());
+                List<ApostaEntity> apostaEntityList = user.getApostas();
+                List<Long> apostaLong = new ArrayList<>();
+
+                for (ApostaEntity aposta : apostaEntityList) {
+                    apostaLong.add(aposta.getId());
+                }
+                userDTO.setApostas(apostaLong);
+                userDTOList.add(userDTO);
+            }
+            return userDTOList;
+        } catch (Exception e) {
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @Override
-    public UserEntity findByEmail(String email) {
-        System.out.println("###### PASSOU FINDBYEMAIL ######");
+    public UserDTO findByEmail(String email) {
+
         try {
             UserEntity user = this.userRepository.findByEmail(email);
-            if (user == null) {
-                System.out.println("###### USER NULO ######");
-                throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
+
+            if (user != null) {
+                return this.mapper.map(user, UserDTO.class);
             }
-            return user;
+            throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
 
         } catch (UserException c) {
             throw c;
         } catch (Exception e) {
-            System.out.println("###### ERRO GERAL FUNDBYemAISL ######");
+
             throw new UserException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -129,7 +144,7 @@ public class UserService implements IUserService {
     private Boolean cadastrarOuAtualizar(UserDTO user) {
         List<ApostaEntity> listApostaEntity = new ArrayList<>();
 
-        if (user.getApostas()!=null && !user.getApostas().isEmpty()) {
+        if (user.getApostas() != null && !user.getApostas().isEmpty()) {
 
             user.getApostas().forEach(aposta -> {
                 if (this.apostaRepository.findById(aposta).isPresent())
@@ -137,7 +152,7 @@ public class UserService implements IUserService {
             });
         }
         UserEntity userEntity = new UserEntity();
-        if(user.getId()!=null) {
+        if (user.getId() != null) {
             userEntity.setId(user.getId());
         }
         userEntity.setEmail(user.getEmail());
