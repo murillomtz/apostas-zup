@@ -51,9 +51,7 @@ public class ApostasZupApplication extends SpringBootServletInitializer implemen
 		aposta2.setData(ld);
 		user1.getApostas().addAll(Arrays.asList(aposta, aposta2));
 
-		userRepository.save(user1);
-		apostaRepository.save(aposta);
-		apostaRepository.save(aposta2);
+		/**/
 
 
 
@@ -66,8 +64,11 @@ public class ApostasZupApplication extends SpringBootServletInitializer implemen
 
 
 
+		/*userRepository.save(user1);
+		apostaRepository.save(aposta);
+		apostaRepository.save(aposta2);
 		userRepository.save(user2);
-		apostaRepository.save(aposta3);
+		apostaRepository.save(aposta3);*/
 
 
 

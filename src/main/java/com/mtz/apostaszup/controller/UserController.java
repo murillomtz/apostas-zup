@@ -70,10 +70,10 @@ public class UserController {
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
-    @GetMapping("/{emailUser}")
-    public ResponseEntity<Response<UserEntity>> consultarUserPorEmail(@PathVariable String emailUser) {
+    @GetMapping("e-mail/{email}")
+    public ResponseEntity<Response<UserEntity>> consultarUserPorEmail(@PathVariable String email) {
         Response<UserEntity> response = new Response<>();
-        response.setData(this.userService.findByEmail(emailUser));
+        response.setData(this.userService.findByEmail(email));
         response.setStatusCode(HttpStatus.OK.value());
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }

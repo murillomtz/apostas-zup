@@ -116,7 +116,6 @@ public class UserService implements IUserService {
                 System.out.println("###### USER NULO ######");
                 throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
             }
-
             return user;
 
         } catch (UserException c) {

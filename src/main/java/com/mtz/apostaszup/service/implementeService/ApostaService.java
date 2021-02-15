@@ -157,6 +157,7 @@ public class ApostaService implements IApostaService {
 
 
         ApostaEntity apostaEntity = null;
+
         if (apostaDTO.getUser() != null && !apostaDTO.getUser().isEmpty()) {
 
             String user = apostaDTO.getUser();

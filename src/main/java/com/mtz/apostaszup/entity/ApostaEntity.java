@@ -30,7 +30,7 @@ public class ApostaEntity implements Serializable {
     @JsonIgnore
     private UserEntity user;
 
-    //@JsonInclude(JsonInclude.Include.NON_EMPTY)
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate data;
 
