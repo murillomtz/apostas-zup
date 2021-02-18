@@ -78,7 +78,8 @@ public class ApostaController {
             @ApiResponse(code = 404, message = "Aposta não encontrada"),
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
-    @GetMapping("/e-mail/{email}")
+    @GetMapping("/e-mail/listarporemail")
+    @ResponseBody
     public ResponseEntity<Response<List<ApostaDTO>>> listarApostaPorEmail(@RequestParam(value = "email") String email) {
 
         Response<List<ApostaDTO>> response = new Response<>();

@@ -1,6 +1,7 @@
 package com.mtz.apostaszup.controller.test;
 
 
+import com.mtz.apostaszup.dto.ApostaDTO;
 import com.mtz.apostaszup.dto.UserDTO;
 import com.mtz.apostaszup.entity.ApostaEntity;
 import com.mtz.apostaszup.entity.UserEntity;
@@ -140,9 +141,16 @@ public class UserControllerIntegradTest {
         URI uri = UriComponentsBuilder.fromHttpUrl(montaUri("/e-mail")).path("/buscarporemail")
                 .queryParam("email", email).build().toUri();
 
+        ResponseEntity<Response<UserDTO>> aposta = restTemplate.exchange(uri, HttpMethod.GET,
+                null, new ParameterizedTypeReference<Response<UserDTO>>() {
+                });
 
-        assertEquals(200, this.restTemplate.getForEntity(uri, Void.class).getStatusCodeValue());
+        System.out.println("Userr ### " + aposta);
+        System.out.println("URI ### " + uri);
 
+        assertNotNull(aposta.getBody().getData());
+        assertEquals(email, aposta.getBody().getData().getEmail());
+        assertEquals(200, aposta.getBody().getStatusCode());
 
     }
 

@@ -9,7 +9,6 @@ import com.mtz.apostaszup.exception.ApostaException;
 import com.mtz.apostaszup.repository.IApostaRepository;
 import com.mtz.apostaszup.repository.IUserRepository;
 import com.mtz.apostaszup.service.IApostaService;
-import jdk.swing.interop.SwingInterOpUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
@@ -63,7 +62,7 @@ public class ApostaService implements IApostaService {
     public Boolean excluir(Long id) {
         try {
             if (this.apostaRepository.findById(id).isPresent()) {
-               // System.out.println("Passou aqui ");
+                // System.out.println("Passou aqui ");
                 this.apostaRepository.deleteById(id);
                 return Boolean.TRUE;
             }
@@ -93,7 +92,7 @@ public class ApostaService implements IApostaService {
     }
 
 
-    //@CachePut(unless = "#result.size()<3")
+    @CachePut(unless = "#result.size()<3")
     @Override
     public List<ApostaDTO> listar() {
         try {
@@ -124,11 +123,7 @@ public class ApostaService implements IApostaService {
     @Override
     public List<ApostaDTO> listaPorData(String email) {
         try {
-            System.out.println("################  Pattou listar por data ########################");
-
             List<ApostaEntity> apostaEntityList = this.apostaRepository.listaPorData(email);
-
-
             List<ApostaDTO> apostaDTOList = new ArrayList<>();
 
             for (ApostaEntity aposta : apostaEntityList) {
@@ -140,11 +135,10 @@ public class ApostaService implements IApostaService {
                 apostaDTOList.add(apostaDTO);
 
             }
-            System.out.println("apostaEntityList" + apostaEntityList);
-            System.out.println("apostaDTOList" + apostaDTOList);
+
             return apostaDTOList;
         } catch (Exception e) {
-            throw e /*new ApostaException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR)*/;
+            throw new ApostaException(MensagensConstant.ERRO_GENERICO.getValor(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

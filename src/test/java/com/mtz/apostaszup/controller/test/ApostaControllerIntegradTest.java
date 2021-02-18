@@ -2,7 +2,6 @@ package com.mtz.apostaszup.controller.test;
 
 
 import com.mtz.apostaszup.dto.ApostaDTO;
-import com.mtz.apostaszup.dto.UserDTO;
 import com.mtz.apostaszup.entity.ApostaEntity;
 import com.mtz.apostaszup.entity.UserEntity;
 import com.mtz.apostaszup.model.Response;
@@ -21,7 +20,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -123,7 +124,6 @@ public class ApostaControllerIntegradTest {
                 null, new ParameterizedTypeReference<Response<List<ApostaDTO>>>() {
                 });
         assertNotNull(cursos.getBody().getData());
-        System.out.println("get data" + cursos.getBody().getData());
         assertEquals(3, cursos.getBody().getData().size());
         assertEquals(200, cursos.getBody().getStatusCode());
     }
@@ -161,5 +161,26 @@ public class ApostaControllerIntegradTest {
         assertEquals(200, aposta.getBody().getStatusCode());
     }
 
+
+    @Test
+    public void testlistarApostaPorEmail() {
+
+        List<ApostaEntity> userList = this.apostaRepository.findAll();
+        String email = userList.get(0).getUser().getEmail();
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(montaUri("/e-mail")).path("/listarporemail")
+                .queryParam("email", email).build().toUri();
+
+
+        ResponseEntity<Response<List<ApostaDTO>>> cursos = restTemplate.exchange(uri, HttpMethod.GET,
+                null, new ParameterizedTypeReference<Response<List<ApostaDTO>>>() {
+                });
+
+        assertNotNull(cursos.getBody().getData());
+        assertEquals(3, cursos.getBody().getData().size());
+        assertEquals(200, cursos.getBody().getStatusCode());
+
+
+    }
 
 }

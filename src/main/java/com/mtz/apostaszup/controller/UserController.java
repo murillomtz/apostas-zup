@@ -72,7 +72,7 @@ public class UserController {
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
-    @GetMapping(value = "/e-mail/buscarporemail")// Executa o código
+    @GetMapping(value = "/e-mail/buscarporemail")
     @ResponseBody
     public ResponseEntity<Response<UserDTO>> consultarUserPorEmail(@RequestParam(value = "email") String email) {
 
