@@ -119,8 +119,8 @@ public class ApostaControllerIntegradTest {
     @Test
     public void testListarAposta() {
 
-        ResponseEntity<Response<List<ApostaEntity>>> cursos = restTemplate.exchange(this.montaUri(""), HttpMethod.GET,
-                null, new ParameterizedTypeReference<Response<List<ApostaEntity>>>() {
+        ResponseEntity<Response<List<ApostaDTO>>> cursos = restTemplate.exchange(this.montaUri(""), HttpMethod.GET,
+                null, new ParameterizedTypeReference<Response<List<ApostaDTO>>>() {
                 });
         assertNotNull(cursos.getBody().getData());
         System.out.println("get data" + cursos.getBody().getData());
@@ -134,8 +134,8 @@ public class ApostaControllerIntegradTest {
         List<ApostaEntity> apostaList = this.apostaRepository.findAll();
         Long id = apostaList.get(0).getId();
 
-        ResponseEntity<Response<ApostaEntity>> aposta = restTemplate.exchange(this.montaUri("/" + id), HttpMethod.GET,
-                null, new ParameterizedTypeReference<Response<ApostaEntity>>() {
+        ResponseEntity<Response<ApostaDTO>> aposta = restTemplate.exchange(this.montaUri("/" + id), HttpMethod.GET,
+                null, new ParameterizedTypeReference<Response<ApostaDTO>>() {
                 });
 
         assertNotNull(aposta.getBody().getData());

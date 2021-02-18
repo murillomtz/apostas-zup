@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.io.Serializable;
 import java.util.*;
 
@@ -28,6 +29,7 @@ public class UserEntity implements Serializable {
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @Column(unique = true,name = "email")
+    @Email
     private String email;
 
     @JsonInclude(JsonInclude.Include.NON_EMPTY)

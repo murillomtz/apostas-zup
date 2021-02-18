@@ -79,10 +79,9 @@ public class ApostaController {
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
     @GetMapping("/e-mail/{email}")
-    public ResponseEntity<Response<List<ApostaDTO>>> listarApostaPorEmail(@PathVariable String email) {
+    public ResponseEntity<Response<List<ApostaDTO>>> listarApostaPorEmail(@RequestParam(value = "email") String email) {
 
         Response<List<ApostaDTO>> response = new Response<>();
-        //List<ApostaDTO> materia = this.apostaService.listaPorData(email);
         response.setData(this.apostaService.listaPorData(email));
         response.setStatusCode(HttpStatus.OK.value());
         response.add(WebMvcLinkBuilder

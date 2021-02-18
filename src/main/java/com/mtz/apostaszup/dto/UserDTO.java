@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.util.List;
 
@@ -18,6 +19,7 @@ public class UserDTO {
     private Long id;
 
     @NotBlank(message = "Informe o email")
+    @Email
     private String email;
 
     @NotBlank(message = "Informe o nome")

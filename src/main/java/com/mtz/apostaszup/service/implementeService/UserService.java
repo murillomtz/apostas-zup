@@ -129,7 +129,20 @@ public class UserService implements IUserService {
             UserEntity user = this.userRepository.findByEmail(email);
 
             if (user != null) {
-                return this.mapper.map(user, UserDTO.class);
+
+                UserDTO userDTO = new UserDTO();
+                userDTO.setId(user.getId());
+                userDTO.setNome(user.getNome());
+                userDTO.setEmail(user.getEmail());
+
+                List<ApostaEntity> apostaEntityList = user.getApostas();
+                List<Long> apostaLong = new ArrayList<>();
+
+                for (ApostaEntity aposta : apostaEntityList) {
+                    apostaLong.add(aposta.getId());
+                }
+                userDTO.setApostas(apostaLong);
+                return userDTO;
             }
             throw new UserException(MensagensConstant.ERRO_USER_NAO_ENCONTRADO.getValor(), HttpStatus.NOT_FOUND);
 

@@ -1,7 +1,6 @@
 package com.mtz.apostaszup.controller.test;
 
 
-import com.mtz.apostaszup.dto.ApostaDTO;
 import com.mtz.apostaszup.dto.UserDTO;
 import com.mtz.apostaszup.entity.ApostaEntity;
 import com.mtz.apostaszup.entity.UserEntity;
@@ -18,10 +17,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 
@@ -120,8 +122,8 @@ public class UserControllerIntegradTest {
     @Test
     public void testListarUser() {
 
-        ResponseEntity<Response<List<UserEntity>>> users = restTemplate.exchange(this.montaUri(""), HttpMethod.GET,
-                null, new ParameterizedTypeReference<Response<List<UserEntity>>>() {
+        ResponseEntity<Response<List<UserDTO>>> users = restTemplate.exchange(this.montaUri(""), HttpMethod.GET,
+                null, new ParameterizedTypeReference<Response<List<UserDTO>>>() {
                 });
 
         assertNotNull(users.getBody().getData());
@@ -134,22 +136,15 @@ public class UserControllerIntegradTest {
 
         List<UserEntity> userList = this.userRepository.findAll();
         String email = userList.get(0).getEmail();
-        System.out.println("EMAIL ########" + email);
-        ResponseEntity<Response<UserEntity>> user = restTemplate.
-                exchange("http://localhost:" + this.port + "/user/e-mail/"+ email, HttpMethod.GET,
-                null, new ParameterizedTypeReference<Response<UserEntity>>() {
-                });
-        System.out.println("USER ########" + user);
-        System.out.println("DATA ########" + user.getBody().getData());
 
-        assertNotNull(user.getBody().getData());
-        assertEquals("userteste@email.com", user.getBody().getData().getId());
-        assertEquals(200, user.getBody().getStatusCode());
+        URI uri = UriComponentsBuilder.fromHttpUrl(montaUri("/e-mail")).path("/buscarporemail")
+                .queryParam("email", email).build().toUri();
+
+
+        assertEquals(200, this.restTemplate.getForEntity(uri, Void.class).getStatusCodeValue());
 
 
     }
-
-
 
 
 }

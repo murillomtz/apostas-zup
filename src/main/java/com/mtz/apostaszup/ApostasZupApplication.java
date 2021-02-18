@@ -11,8 +11,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -64,14 +67,15 @@ public class ApostasZupApplication extends SpringBootServletInitializer implemen
 
 
 
-		userRepository.save(user1);
+		/*userRepository.save(user1);
 		apostaRepository.save(aposta);
 		apostaRepository.save(aposta2);
 		userRepository.save(user2);
-		apostaRepository.save(aposta3);
+		apostaRepository.save(aposta3);*/
 
 
 
 
 	}
+
 }

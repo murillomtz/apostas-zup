@@ -8,7 +8,7 @@ import com.mtz.apostaszup.entity.UserEntity;
 import java.util.List;
 
 public interface IUserService {
-
+    // Onde vc está implementando isso
     Boolean cadastrar(UserDTO userDTO);
 
     Boolean excluir(Long id);

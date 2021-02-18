@@ -23,7 +23,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,11 +111,13 @@ public class UserControllerUnitTest {
 
         Mockito.when(this.userService.findByEmail("testeconsulta@email.com")).thenReturn(user);
 
-        ResponseEntity<Response<UserEntity>> cursoResponse = restTemplate.exchange(
-                this.montaUri("/e-mail/testeconsulta@email.com"), HttpMethod.GET, null,
-                new ParameterizedTypeReference<Response<UserEntity>>() {
-                });
-        assertNotNull(cursoResponse.getBody().getData());
-        assertEquals(200, cursoResponse.getBody().getStatusCode());
-    }
+                String email = "testeconsulta@email.com";
+
+        URI uri = UriComponentsBuilder.fromHttpUrl(montaUri("/e-mail")).path("/buscarporemail")
+                .queryParam("email", email).build().toUri();
+
+
+        assertEquals(200, this.restTemplate.getForEntity(uri, Void.class).getStatusCodeValue());
+
+         }
 }

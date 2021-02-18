@@ -13,7 +13,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,13 +72,14 @@ public class UserController {
             @ApiResponse(code = 404, message = "Usuário não encontrado"),
             @ApiResponse(code = 500, message = "Erro interno no serviço"),
     })
-    @GetMapping("e-mail/{email}")
-    public ResponseEntity<Response<UserDTO>> consultarUserPorEmail(@PathVariable String email) {
+    @GetMapping(value = "/e-mail/buscarporemail")// Executa o código
+    @ResponseBody
+    public ResponseEntity<Response<UserDTO>> consultarUserPorEmail(@RequestParam(value = "email") String email) {
+
         Response<UserDTO> response = new Response<>();
         response.setData(this.userService.findByEmail(email));
         response.setStatusCode(HttpStatus.OK.value());
-        //response.setCharacterEncoding("UTF-8");
-
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 }
+
