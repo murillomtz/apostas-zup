@@ -67,11 +67,11 @@ public class ApostasZupApplication extends SpringBootServletInitializer implemen
 
 
 
-		/*userRepository.save(user1);
+		userRepository.save(user1);
 		apostaRepository.save(aposta);
 		apostaRepository.save(aposta2);
 		userRepository.save(user2);
-		apostaRepository.save(aposta3);*/
+		apostaRepository.save(aposta3);
 
 
 
